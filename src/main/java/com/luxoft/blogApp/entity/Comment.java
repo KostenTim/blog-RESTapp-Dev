@@ -1,10 +1,7 @@
 package com.luxoft.blogApp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,6 +22,7 @@ public class Comment {
     private String text;
     @Column
     private Date creationDate;
+    @ToString.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id")
     @JsonIgnore
