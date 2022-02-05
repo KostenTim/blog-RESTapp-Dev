@@ -62,7 +62,7 @@ public class PostController {
     @PutMapping("/{id}")
     ResponseEntity<Post> update(@RequestBody Post post, @PathVariable Long id) {
         post.setId(id);
-        Post savedPost = defaultService.save(post);
+        Post savedPost = defaultService.update(post);
         if (savedPost == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {

@@ -23,7 +23,8 @@ import java.util.List;
 public class CommentController {
 
     private final DefaultService defaultService;
-    private final CommentServiceImpl commentService;
+    private final CommentServiceImpl commentServiceImpl;
+
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @PostMapping
@@ -32,7 +33,7 @@ public class CommentController {
         if(post == null){
             return  new ResponseEntity<Comment>(HttpStatus.BAD_REQUEST);
         }else{
-           Comment comment =  commentService.save(Comment.builder()
+           Comment comment =  commentServiceImpl.save(Comment.builder()
                     .id(0L)
                     .text(dto.getText())
                     .creationDate(new Date())
@@ -49,7 +50,7 @@ public class CommentController {
         if (post == null) {
             return new ResponseEntity<PostFullResponseDto>(HttpStatus.BAD_REQUEST);
         } else {
-            List<Comment> commentList = commentService.getAllByPostId(post.getId());
+            List<Comment> commentList = commentServiceImpl.getAllByPostId(post.getId());
             PostFullResponseDto dto = PostFullResponseDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
