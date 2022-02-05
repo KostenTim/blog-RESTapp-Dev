@@ -48,6 +48,26 @@ public class PostController {
         }
     }
 
+    @GetMapping("/{id}/comments")
+    ResponseEntity<List<Comment>> getCommentsByPostId(@PathVariable Long id) {
+            return new ResponseEntity<List<Comment>>( commentService.getAllByPostId(id), HttpStatus.OK);
+        }
+
+
+    @GetMapping("/{postId}/comment/{commentId}")
+    ResponseEntity<Comment> getCommentByPostIdAndCommentId(
+            @PathVariable Long postId,
+            @PathVariable Long commentId
+    ) {
+        Comment comment = commentService.getByIdAndPostId(commentId, postId);
+        if (comment == null) {
+            return new ResponseEntity<Comment>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<Comment>(comment, HttpStatus.OK);
+        }
+    }
+
+
     @DeleteMapping("/{id}")
     ResponseEntity<Post> delete(@PathVariable Long id) {
         Post post = defaultService.getById(id);

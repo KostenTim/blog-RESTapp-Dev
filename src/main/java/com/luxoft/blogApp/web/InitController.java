@@ -60,21 +60,18 @@ public class InitController {
         postInit();
 
         commentService.save(Comment.builder()
-                        .id(0L)
                         .text("text1")
                         .creationDate(new Date())
                         .post(defaultService.getAll().get(0))
                 .build());
 
         commentService.save(Comment.builder()
-                .id(0L)
                 .text("text2")
                 .creationDate(new Date())
                 .post(defaultService.getAll().get(0))
                 .build());
 
         commentService.save(Comment.builder()
-                .id(0L)
                 .text("text2")
                 .creationDate(new Date())
                 .post(defaultService.getAll().get(1))

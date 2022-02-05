@@ -92,7 +92,6 @@ class PostControllerTest {
                 .content("chanel spring couture collection")
                 .build();
         when(defaultService.getById(post.getId())).thenReturn(post);
-
         this.mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/posts/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -129,7 +128,6 @@ class PostControllerTest {
                 .star(true)
                 .build();
         when(defaultService.returnMarkedByStar()).thenReturn(List.of(post, nextPost));
-
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("/api/v1/posts/star"))

@@ -1,10 +1,7 @@
 package com.luxoft.blogApp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,19 +24,9 @@ public class Post {
     private String content;
     @Column
     private boolean star;
+    @ToString.Exclude
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "post_id")
     @JsonIgnore
     private List<Comment> comments;
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", star=" + star +
-                ", comments=" + comments +
-                '}';
-    }
 }

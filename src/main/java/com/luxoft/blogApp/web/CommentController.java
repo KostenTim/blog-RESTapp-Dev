@@ -1,7 +1,6 @@
 package com.luxoft.blogApp.web;
 
 import com.luxoft.blogApp.dto.CommentCreateRequestDto;
-import com.luxoft.blogApp.dto.PostFullResponseDto;
 import com.luxoft.blogApp.entity.Comment;
 import com.luxoft.blogApp.entity.Post;
 import com.luxoft.blogApp.service.CommentServiceImpl;
@@ -34,7 +33,6 @@ public class CommentController {
             return  new ResponseEntity<Comment>(HttpStatus.BAD_REQUEST);
         }else{
            Comment comment =  commentServiceImpl.save(Comment.builder()
-                    .id(0L)
                     .text(dto.getText())
                     .creationDate(new Date())
                     .post(post)
@@ -44,73 +42,44 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/{id}/full")
-    ResponseEntity<PostFullResponseDto> getFullPostById(@PathVariable Long id) {
-        Post post = defaultService.getById(id);
-        if (post == null) {
-            return new ResponseEntity<PostFullResponseDto>(HttpStatus.BAD_REQUEST);
-        } else {
-            List<Comment> commentList = commentServiceImpl.getAllByPostId(post.getId());
-            PostFullResponseDto dto = PostFullResponseDto.builder()
-                    .id(post.getId())
-                    .title(post.getTitle())
-                    .content(post.getContent())
-                    .star(post.isStar())
-                    .comments(commentList)
-                    .build();
-            return new ResponseEntity<PostFullResponseDto>(dto, HttpStatus.OK);
-        }
-    }
-
     @DeleteMapping("/{id}")
-    ResponseEntity<Post> delete(@PathVariable Long id) {
-        Post post = defaultService.getById(id);
-        if (post == null) {
+    ResponseEntity<Comment> delete(@PathVariable Long id) {
+        Comment comment = commentServiceImpl.getById(id);
+        if (comment == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            defaultService.delete(id);
+            commentServiceImpl.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Post> update(@RequestBody Post post, @PathVariable Long id) {
-        post.setId(id);
-        Post savedPost = defaultService.save(post);
-        if (savedPost == null) {
+    ResponseEntity<Comment> update(@RequestParam String text, @PathVariable Long id) {
+        Comment comment = commentServiceImpl.getById(id);
+        comment.setText(text);
+        Comment updatedComment = commentServiceImpl.update(comment);
+        if (updatedComment == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(savedPost, HttpStatus.OK);
+            return new ResponseEntity<>(updatedComment, HttpStatus.OK);
         }
     }
 
-    @GetMapping
-    ResponseEntity<List<Post>> getAndSort(@RequestParam(value = "title", required = false) String title,
-                                          @RequestParam(value = "sort", required = false) String sort) {
-        if (title != null) {
-            logger.info("findAllPostsByTitle");
-            return new ResponseEntity<List<Post>>(defaultService.findAllByTitle(title), HttpStatus.OK);
-        } else if (sort != null) {
-            logger.info("findAllPostsAndSortedByTitle");
-            return new ResponseEntity<List<Post>>(defaultService.findAllWithSort(sort), HttpStatus.OK);
+    @GetMapping()
+    ResponseEntity<List<Comment>> getAll() {
+            return new ResponseEntity<List<Comment>>(commentServiceImpl.getAll(), HttpStatus.OK);
+        }
+
+    @GetMapping("/{id}")
+    ResponseEntity<Comment> update(@PathVariable Long id) {
+        Comment comment = commentServiceImpl.getById(id);
+        if (comment == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<List<Post>>(defaultService.getAll(), HttpStatus.OK);
+            return new ResponseEntity<>(comment, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/star")
-    ResponseEntity<List<Post>> getPostsMarkByStar() {
-        return new ResponseEntity<List<Post>>(defaultService.returnMarkedByStar(), HttpStatus.OK);
-    }
 
-    @PutMapping("/{id}/star")
-    ResponseEntity<Post> markPostByStar(@PathVariable Long id) {
-        return new ResponseEntity<Post>(defaultService.markedByStar(id), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}/star")
-    ResponseEntity<Post> updatePostBySetStarFalse(@PathVariable Long id) {
-        return new ResponseEntity<Post>(defaultService.unmarkedByStar(id), HttpStatus.OK);
-    }
 
 }

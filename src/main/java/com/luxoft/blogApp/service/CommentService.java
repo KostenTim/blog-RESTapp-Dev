@@ -19,5 +19,7 @@ public interface CommentService {
 
     List<Comment> getAllByPostId(Long postId);
 
+    Comment getByIdAndPostId(Long Id, Long postId);
+
 }
 

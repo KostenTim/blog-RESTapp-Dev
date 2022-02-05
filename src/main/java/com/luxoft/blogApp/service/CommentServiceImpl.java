@@ -15,13 +15,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
 
     @Override
     public List<Comment> getAll() {
-        return null;
+        return commentRepository.findAll();
     }
 
     @Override
@@ -31,21 +30,34 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getById(Long id) {
-        return null;
+        return commentRepository.findById(id).orElse(null);
     }
 
     @Override
     public void delete(Long id) {
-
+        commentRepository.deleteById(id);
     }
 
     @Override
     public Comment update(Comment comment) {
-        return null;
+        if(comment.getId() == null){
+            return null;
+        }
+        Comment existingComment = getById(comment.getId());
+        if (existingComment != null) {
+            return commentRepository.save(existingComment);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public List<Comment> getAllByPostId(Long postId) {
         return commentRepository.findByPost_Id(postId);
+    }
+
+    @Override
+    public Comment getByIdAndPostId(Long id, Long postId) {
+        return commentRepository.findByIdAndPost_Id(id, postId).orElse(null);
     }
 }
